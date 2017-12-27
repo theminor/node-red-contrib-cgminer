@@ -1,4 +1,4 @@
-require('coffeescript/register');
+require('coffee-script');
 var CGMinerClient = require('cgminer');
 
 module.exports = function(RED) {
