@@ -10,7 +10,6 @@ module.exports = function(RED) {
 		var node = this;
 		node.on('input', function(msg) {
 
-node.warn("13 - Input recieved");
 			var objectifyMinerData = function(dataString) {		// take miner data string and convert it to an object
 				var rtn = {};
 				var arr = dataString.split('] ');
@@ -33,13 +32,12 @@ node.warn("27 - parseMinerData()");
 						}
 					}
 				}
+node.warn("35 - parseMinerData() return \n" + resultToParse);
 				return resultToParse;
 			};
 			
-node.warn("39 - call cgminer");
 			// obtain stats from cgminer and send the data as msg payload
 			client.stats().then(function(cgMinerData) {
-node.warn("42 - parse data");
 				msg.payload = parseMinerData(cgMinerData);		// parse data once promise is returned
 				node.send(msg);									// msg.payload should contain object containing the miner data
 			}).done();
