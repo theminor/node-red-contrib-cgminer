@@ -3,11 +3,11 @@ var CGMinerClient = require('cgminer');
 
 module.exports = function(RED) {
 	RED.nodes.registerType("cgminer", function(config) {
+		RED.nodes.createNode(this, config);
+		var node = this;
 		var client = new CGMinerClient();
 		client.host = config.ip;
 		client.port = config.port;
-
-		var node = this;
 		node.on('input', function(msg) {
 
 			var objectifyMinerData = function(dataString) {		// take miner data string and convert it to an object
@@ -41,7 +41,7 @@ module.exports = function(RED) {
 				msg.title = 'CGMiner Data';			// see https://github.com/node-red/node-red/wiki/Node-msg-Conventions
 				msg.description = 'JSON data from CGMiner';
 				node.send(msg);					// msg.payload should contain object containing the miner data
-			}).done();
+			}).done();			
 		});
 	});
 };
