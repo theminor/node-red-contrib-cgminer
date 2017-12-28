@@ -23,7 +23,6 @@ module.exports = function(RED) {
 
 			var parseMinerData = function(resultToParse) {		// return object containing the miner data obtained from cgminer
 				// var minerDataArr = []
-node.warn("27 - parseMinerData()");
 				for (var i = 0; i < resultToParse.STATS.length; i++) {										// cgminer api returns a count of miners under a given AUC3 controller for my Avalon Miners. Not sure if this is universal.
 					if (resultToParse.STATS[i].hasOwnProperty('MM Count')) {								// This contains data for each individual miner, and is really the main data I'm interested in for my setup...
 						for (var j = 1; j <= resultToParse.STATS[i]['MM Count']; j++) {						// MM Count starts with 1, not 0
@@ -32,7 +31,6 @@ node.warn("27 - parseMinerData()");
 						}
 					}
 				}
-node.warn("35 - parseMinerData() return \n" + JSON.stringify(resultToParse));
 				return resultToParse;
 			};
 			
