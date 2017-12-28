@@ -10,6 +10,7 @@ module.exports = function(RED) {
 		var node = this;
 		node.on('input', function(msg) {
 
+node.warn("13 - Input recieved");
 			var objectifyMinerData = function(dataString) {		// take miner data string and convert it to an object
 				var rtn = {};
 				var arr = dataString.split('] ');
@@ -23,6 +24,7 @@ module.exports = function(RED) {
 
 			var parseMinerData = function(resultToParse) {		// return object containing the miner data obtained from cgminer
 				// var minerDataArr = []
+node.warn("27 - parseMinerData()");
 				for (var i = 0; i < resultToParse.STATS.length; i++) {										// cgminer api returns a count of miners under a given AUC3 controller for my Avalon Miners. Not sure if this is universal.
 					if (resultToParse.STATS[i].hasOwnProperty('MM Count')) {								// This contains data for each individual miner, and is really the main data I'm interested in for my setup...
 						for (var j = 1; j <= resultToParse.STATS[i]['MM Count']; j++) {						// MM Count starts with 1, not 0
@@ -33,9 +35,11 @@ module.exports = function(RED) {
 				}
 				return resultToParse;
 			};
-
+			
+node.warn("39 - call cgminer");
 			// obtain stats from cgminer and send the data as msg payload
 			client.stats().then(function(cgMinerData) {
+node.warn("42 - parse data");
 				msg.payload = parseMinerData(cgMinerData);		// parse data once promise is returned
 				node.send(msg);									// msg.payload should contain object containing the miner data
 			}).done();
