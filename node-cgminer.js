@@ -32,7 +32,7 @@ node.warn("27 - parseMinerData()");
 						}
 					}
 				}
-node.warn("35 - parseMinerData() return \n" + resultToParse);
+node.warn("35 - parseMinerData() return \n" + JSON.stringify(resultToParse));
 				return resultToParse;
 			};
 			
