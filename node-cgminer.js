@@ -36,8 +36,11 @@ module.exports = function(RED) {
 			
 			// obtain stats from cgminer and send the data as msg payload
 			client.stats().then(function(cgMinerData) {
-				msg.payload = parseMinerData(cgMinerData);		// parse data once promise is returned
-				node.send(msg);									// msg.payload should contain object containing the miner data
+				msg.data = parseMinerData(cgMinerData);		// parse data once promise is returned
+				msg.payload = JSON.stringify(msg.data);		// apparently payload is expected to be a string; msg.data can be used for the full object
+				msg.title = 'CGMiner Data';			// see https://github.com/node-red/node-red/wiki/Node-msg-Conventions
+				msg.description = 'JSON data from CGMiner';
+				node.send(msg);					// msg.payload should contain object containing the miner data
 			}).done();
 		});
 	});
