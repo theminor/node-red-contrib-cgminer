@@ -2,16 +2,16 @@ require('coffee-script');
 var CGMinerClient = require('cgminer');
 
 module.exports = function(RED) {
-    RED.nodes.registerType("cgminer", function(config) {
+	RED.nodes.registerType("cgminer", function(config) {
 		var client = new CGMinerClient();
 		client.host = config.ip;
 		client.port = config.port;
 
-        var node = this;
-        node.on('input', function(msg) {
+		var node = this;
+		node.on('input', function(msg) {
 
 			var objectifyMinerData = function(dataString) {		// take miner data string and convert it to an object
-				var rtn = {}
+				var rtn = {};
 				var arr = dataString.split('] ');
 				for (var i = 0; i < arr.length; i++) {
 					var key = arr[i].slice(0, arr[i].indexOf('['));
@@ -34,6 +34,6 @@ module.exports = function(RED) {
 			};
 
 			client.stats().then(function(cgMinerData) { msg.payload = getMinerData(cgMinerData); node.send(msg); }).done();		// parse data once promise is returned
-        });
+		});
 	});
 };
