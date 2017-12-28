@@ -1,34 +1,34 @@
 <script type="text/javascript">
-    RED.nodes.registerType('cgminer',{
-        category: 'function',
-        color: '#87A980',
-        defaults: {
-            name: { value: "" },
+	RED.nodes.registerType('cgminer', {
+		category: 'function',
+		color: '#87A980',
+		defaults: {
+			name: { value: "" },
 			ip:   { value: "127.0.0.1"},
 			port: { value: "4028" }
-        },
-        inputs:1,
-        outputs:1,
-        icon: "hash.png",
-        label: function() {
-            return this.name||"cgminer";
-        }
-    });
+		},
+		inputs:1,
+		outputs:1,
+		icon: "hash.png",
+		label: function() {
+			return this.name||"cgminer";
+		}
+	});
 </script>
 
 <script type="text/x-red" data-template-name="cgminer">
-    <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
-    </div>
-    <div class="form-row">
-        <label for="node-input-cgHost-ip"><i class="icon-tag"></i> IP or Web Address of CG Miner Host</label>
-        <input type="text" id="node-input-cgHost-ip" placeholder="127.0.0.1">
-        <label for="node-input-cgHost-port"><i class="icon-tag"></i> Port of CG Miner Host</label>
-        <input type="text" id="node-input-cgHost-port" placeholder="4028">
-    </div>
+	<div class="form-row">
+		<label for="node-input-name"><i class="icon-tag"></i> Name</label>
+		<input type="text" id="node-input-name" placeholder="Name">
+	</div>
+	<div class="form-row">
+		<label for="node-input-cgHost-ip"><i class="icon-tag"></i> IP or Web Address of CG Miner Host</label>
+		<input type="text" id="node-input-cgHost-ip" placeholder="127.0.0.1">
+		<label for="node-input-cgHost-port"><i class="icon-tag"></i> Port of CG Miner Host</label>
+		<input type="text" id="node-input-cgHost-port" placeholder="4028">
+	</div>
 </script>
 
 <script type="text/x-red" data-help-name="cgminer">
-    <p>A node that optains data from the cgminer api</p>
+	<p>A node that optains data from the cgminer api</p>
 </script>
