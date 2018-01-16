@@ -1,4 +1,4 @@
 # node-red-contrib-cgminer
 cgminer node for Node-Red
 
-Has basic functionality, but still working on it.
+Reads status data from a running CGMiner API instance. Requires the API to be enabled in CGMiner (read only shoudl be fine).
