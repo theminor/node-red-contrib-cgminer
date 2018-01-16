@@ -16,6 +16,35 @@
 	});
 </script>
 
+<script type="text/x-red" data-help-name="node-type">
+<p>Retrieves data from CGMiner</p>
+<h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt class="optional">name <span class="property-type">string</span></dt>
+        <dd> the name assigned to the node</dd>
+        <dt>ip or web address <span class="property-type">string</span></dt>
+        <dd> the ip address or web address from which to access the running CGMiner API</dd>
+        <dt>port <span class="property-type">string</span></dt>
+        <dd> the port on which the CGMiner API is running</dd>
+    </dl>
+ <h3>Output</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">object</span></dt>
+        <dd> the complete javascript object returned by CGMiner</dd>
+    </dl>
+<h3>Details</h3>
+    <p>When triggered, this node will retrieve data from a running CGMiner instance.
+        The CGMiner API must be enabled and properly configured, as set forth in the
+        CGMiner <a href="https://github.com/ckolivas/cgminer/blob/master/API-README">documentation</a>.</p>
+    <p><code>msg.payload</code> is returned upon a successful API status request
+        and containes the complete, parsed object containing the returned data.</p>
+<h3>References</h3>
+    <ul>
+        <li><a href="https://github.com/ckolivas/cgminer">CGMiner</a> - teh CGMiner project</li>
+        <li><a href="https://github.com/theminor/node-red-contrib-cgminer">GitHub</a> - repository for this node</li>
+    </ul>
+</script>
+
 <script type="text/x-red" data-template-name="cgminer">
 	<div class="form-row">
 		<label for="node-input-name"><i class="icon-tag"></i>Name</label>
