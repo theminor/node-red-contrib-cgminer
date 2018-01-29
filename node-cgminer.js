@@ -1,6 +1,6 @@
 var net = require('net');
 
-var cgSendCmd = function (command, config, callback) {
+var cgSendCmd = function (command, config, node, callback) {
 	var dataStg = '';
 	var socket;
 	try {
@@ -9,7 +9,7 @@ var cgSendCmd = function (command, config, callback) {
 			socket.on('end', function () {													// all data recieved from the response. Now pass to callback()
 				socket.removeAllListeners();
 				try { dataStg = JSON.parse(dataStg); }										// attempt to parse as an object, but if it fails, just return the string (my miners, for example, don't return proper json
-				catch(err) { console.log('Error parsing json: ' + err); }
+				catch(err) { node.warn('Error parsing json: ' + err); }
 				callback(dataStg);
 				// return(dataStg);
 			});
@@ -17,11 +17,11 @@ var cgSendCmd = function (command, config, callback) {
 		});
 		socket.on('error', function (err) {
 			socket.removeAllListeners();
-			console.log('Net socket error: ' + err);
+			node.error('Net socket error: ' + err);
 			return null;
 		});
 	} catch (err) {
-		console.log('Error in net socket connection: ' + err);
+		node.error('Error in net socket connection: ' + err);
 		return null;
 	}
 }
@@ -32,7 +32,7 @@ module.exports = function(RED) {
 		var node = this;
 		node.on('input', function(msg) {													// input can be a simple string representing a command to send to cg miner, or an object (or json) for commands with
 			if (typeof msg !== 'string') msg = JSON.stringify(msg);							// paremeters, like this: { command: command, parameter: parameter }
-			cgSendCmd(msg, config, function(cgMinerData) {
+			cgSendCmd(msg, config, node, function(cgMinerData) {
 				msg.payload = cgMinerData;
 				msg.title = 'CGMiner Data';													// see https://github.com/node-red/node-red/wiki/Node-msg-Conventions
 				msg.description = 'JSON data from CGMiner';
