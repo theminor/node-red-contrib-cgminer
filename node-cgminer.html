@@ -36,24 +36,27 @@
 <p>Retrieves data from CGMiner</p>
 <h3>Inputs</h3>
     <dl class="message-properties">
-        <dt class="optional">name <span class="property-type">string</span></dt>
-        <dd> the name assigned to the node</dd>
-        <dt>ip or web address <span class="property-type">string</span></dt>
-        <dd> the ip address or web address from which to access the running CGMiner API</dd>
-        <dt>port <span class="property-type">string</span></dt>
-        <dd> the port on which the CGMiner API is running</dd>
+        <dt class="optional">payload <span class="property-type">string | object</span></dt>
+        <dd> the command to send to CGMiner (see the
+		     <a href="https://github.com/ckolivas/cgminer/blob/master/API-README">CGMiner API documentation</a>
+			 for commands that can be sent). <code>msg.payload</code> may be a simple string, such as
+			 <code>summary</code>, or may be an object - either a JSON string or a javascript object - containing
+			 the command and any paremeters, for example:
+			 <code>{&quot;command&quot;:&quot;hotplug&quot;,&quot;parameter&quot;:&quot;0&quot;}</code>.</dd>
     </dl>
  <h3>Output</h3>
     <dl class="message-properties">
-        <dt>payload <span class="property-type">object</span></dt>
-        <dd> the complete javascript object returned by CGMiner</dd>
+        <dt>payload <span class="property-type">object | string</span></dt>
+        <dd> the complete javascript object returned by CGMiner, or, if the data can't be parsed
+		     into an object, the string data returned</dd>
     </dl>
 <h3>Details</h3>
     <p>When triggered, this node will retrieve data from a running CGMiner instance.
         The CGMiner API must be enabled and properly configured, as set forth in the
         CGMiner <a href="https://github.com/ckolivas/cgminer/blob/master/API-README">documentation</a>.</p>
     <p><code>msg.payload</code> is returned upon a successful API status request
-        and contains the complete, parsed object data from CGMiner.</p>
+        and contains the complete, parsed object data from CGMiner; however, if CGMiner can't parse the
+	    returned data as valid json, the actual string data returned will be sent instead.</p>
 <h3>References</h3>
     <ul>
         <li><a href="https://github.com/ckolivas/cgminer">CGMiner</a> - teh CGMiner project</li>
