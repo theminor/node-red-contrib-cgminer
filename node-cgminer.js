@@ -33,7 +33,7 @@ module.exports = function(RED) {
 		node.on('input', function(msg) {													// input can be a simple string representing a command to send to cg miner, or an object (or json) for commands with
 			if (typeof msg !== 'string') msg = JSON.stringify(msg);							// paremeters, like this: { command: command, parameter: parameter }
 			cgSendCmd(msg, config, function(cgMinerData) {
-				msg.payload = parseMinerData(cgMinerData);
+				msg.payload = cgMinerData;
 				msg.title = 'CGMiner Data';													// see https://github.com/node-red/node-red/wiki/Node-msg-Conventions
 				msg.description = 'JSON data from CGMiner';
 				node.send(msg);																// msg.payload should contain object containing the miner data (or a string, if parsing the object failed)
