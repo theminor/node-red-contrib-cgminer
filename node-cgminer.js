@@ -1,46 +1,43 @@
-require('coffee-script');
-var CGMinerClient = require('cgminer');
+var net = require('net');
+
+var cgSendCmd = function (command, config, callback) {
+	var dataStg = '';
+	var socket;
+	try {
+		socket = net.connect({ host: config.ip, port: config.port }, function () {
+			socket.on('data', function (res) { dataStg += res.toString(); });				// build data string as it is recieved
+			socket.on('end', function () {													// all data recieved from teh response. Now pass to callback()
+				socket.removeAllListeners();
+				try { dataStg = callback(JSON.parse(dataStg.replace('\x00', ''))); }		// attempt to parse as an object, but if it fails, just return the string (my miners, for example, don't return proper json
+				catch(err) { console.log('Error parsing json: ' + err); }
+				callback(dataStg);
+				return(dataStg);
+			});
+			socket.write(command);															// CGMiner can take commands as a simple string (for simple commands) or as json, i.e.: { command: command, parameter: parameter }
+		});
+		socket.on('error', function (err) {
+			socket.removeAllListeners();
+			console.log('Net socket error: ' + err);
+			return null;
+		});
+	} catch (err) {
+		console.log('Error in net socket connection: ' + err);
+		return null;
+	}
+}
 
 module.exports = function(RED) {
 	RED.nodes.registerType("cgminer", function(config) {
 		RED.nodes.createNode(this, config);
 		var node = this;
-		var client = new CGMinerClient();
-		client.host = config.ip;
-		client.port = config.port;
-		node.on('input', function(msg) {
-
-			var objectifyMinerData = function(dataString) {		// take miner data string and convert it to an object
-				var rtn = {};
-				var arr = dataString.split('] ');
-				for (var i = 0; i < arr.length; i++) {
-					var key = arr[i].slice(0, arr[i].indexOf('['));
-					var val = arr[i].slice(arr[i].indexOf('[') + 1);
-					rtn[key] = val;
-				}
-				return rtn;
-			};
-
-			var parseMinerData = function(resultToParse) {		// return object containing the miner data obtained from cgminer
-				// var minerDataArr = []
-				for (var i = 0; i < resultToParse.STATS.length; i++) {										// cgminer api returns a count of miners under a given AUC3 controller for my Avalon Miners. Not sure if this is universal.
-					if (resultToParse.STATS[i].hasOwnProperty('MM Count')) {								// This contains data for each individual miner, and is really the main data I'm interested in for my setup...
-						for (var j = 1; j <= resultToParse.STATS[i]['MM Count']; j++) {						// MM Count starts with 1, not 0
-							// minerDataArr.push(objectifyMinerData(resultToParse.STATS[i]['MM ID' + j]));
-							resultToParse.STATS[i]['MM ID' + j] = objectifyMinerData(resultToParse.STATS[i]['MM ID' + j]);		// replace MM ID data with object containing that data
-						}
-					}
-				}
-				return resultToParse;
-			};
-			
-			// obtain stats from cgminer and send the data as msg payload
-			client.stats().then(function(cgMinerData) {
+		node.on('input', function(msg) {													// input can be a simple string representing a command to send to cg miner, or an object (or json) for commands with
+			if (typeof msg !== 'string') msg = JSON.stringify(msg);							// paremeters, like this: { command: command, parameter: parameter }
+			cgSendCmd(msg, config, function(cgMinerData) {
 				msg.payload = parseMinerData(cgMinerData);
-				msg.title = 'CGMiner Data';			// see https://github.com/node-red/node-red/wiki/Node-msg-Conventions
+				msg.title = 'CGMiner Data';													// see https://github.com/node-red/node-red/wiki/Node-msg-Conventions
 				msg.description = 'JSON data from CGMiner';
-				node.send(msg);					// msg.payload should contain object containing the miner data
-			}).done();			
+				node.send(msg);																// msg.payload should contain object containing the miner data (or a string, if parsing the object failed)
+			});
 		});
 	});
 };
