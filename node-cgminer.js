@@ -8,10 +8,10 @@ var cgSendCmd = function (command, config, callback) {
 			socket.on('data', function (res) { dataStg += res.toString(); });				// build data string as it is recieved
 			socket.on('end', function () {													// all data recieved from the response. Now pass to callback()
 				socket.removeAllListeners();
-				try { dataStg = callback(JSON.parse(dataStg.replace('\x00', ''))); }		// attempt to parse as an object, but if it fails, just return the string (my miners, for example, don't return proper json
+				try { dataStg = JSON.parse(dataStg); }										// attempt to parse as an object, but if it fails, just return the string (my miners, for example, don't return proper json
 				catch(err) { console.log('Error parsing json: ' + err); }
 				callback(dataStg);
-				return(dataStg);
+				// return(dataStg);
 			});
 			socket.write(command);															// CGMiner can take commands as a simple string (for simple commands) or as json, i.e.: { command: command, parameter: parameter }
 		});
