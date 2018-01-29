@@ -6,7 +6,7 @@ var cgSendCmd = function (command, config, callback) {
 	try {
 		socket = net.connect({ host: config.ip, port: config.port }, function () {
 			socket.on('data', function (res) { dataStg += res.toString(); });				// build data string as it is recieved
-			socket.on('end', function () {													// all data recieved from teh response. Now pass to callback()
+			socket.on('end', function () {													// all data recieved from the response. Now pass to callback()
 				socket.removeAllListeners();
 				try { dataStg = callback(JSON.parse(dataStg.replace('\x00', ''))); }		// attempt to parse as an object, but if it fails, just return the string (my miners, for example, don't return proper json
 				catch(err) { console.log('Error parsing json: ' + err); }
