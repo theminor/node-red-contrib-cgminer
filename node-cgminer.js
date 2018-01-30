@@ -8,7 +8,7 @@ var cgSendCmd = function (command, config, node, callback) {
 			socket.on('data', function (res) { dataStg += res.toString(); });				// build data string as it is recieved
 			socket.on('end', function () {													// all data recieved from the response. Now pass to callback()
 				socket.removeAllListeners();
-				try { dataStg = JSON.parse(dataStg.replace(/\u0000/g,'')); }					// attempt to parse as an object, but if it fails, just return the string (my miners, for example, don't return proper json
+				try { dataStg = JSON.parse(dataStg.replace(/\u0000/g, '').replace(/}{/g, '},{')); }	// attempt to parse as an object, but if it fails, just return the string (my miners, for example, don't return proper json
 				catch(err) { node.warn('Error parsing json: ' + err); }
 				callback(dataStg);
 				// return(dataStg);
