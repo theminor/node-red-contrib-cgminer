@@ -63,8 +63,9 @@
     <p><code>msg.payload</code> is returned upon a successful API status request
         and contains the complete, parsed object data from CGMiner; however, if CGMiner can't parse the
 	    returned data as valid json, the actual string data returned will be sent instead.</p>
-    <p>The <code>timeout</code> option is a period of time, in milliseconds, after which the api request
-		to cgminer will give up. If the request times out, the data returned will be empty.</p>
+    <p>The <code>timeout</code> option is optional. If given, it represents a period of time, in milliseconds,
+		after which the api request to cgminer will give up. If the request times out, the data returned will
+		be empty.</p>
 <h3>References</h3>
     <ul>
         <li><a href="https://github.com/ckolivas/cgminer">CGMiner</a> - the CGMiner project</li>
