@@ -1,18 +1,27 @@
 var net = require('net');
 
 var cgSendCmd = function (command, config, node, callback) {
+	var tmout = null;
 	var dataStg = '';
 	var socket;
 	try {
 		socket = net.connect({ host: config.ip, port: config.port }, function () {
 			socket.on('data', function (res) { dataStg += res.toString(); });				// build data string as it is recieved
 			socket.on('end', function () {													// all data recieved from the response. Now pass to callback()
+				if (tmout) clearTimeout(tmout);
 				socket.removeAllListeners();
 				try { dataStg = JSON.parse(dataStg.replace(/\u0000/g, '').replace(/}{/g, '},{')); }	// attempt to parse as an object, but if it fails, just return the string (my miners, for example, don't return proper json
 				catch(err) { node.warn('Error parsing json: ' + err); }
 				callback(dataStg);
 				// return(dataStg);
 			});
+			if (config.timeout) {
+				tmout = setTimeout(function() {
+					socket.removeAllListeners();
+					callback('');															// send empty string if request times out
+					return;
+				}, Number(config.timeout));
+			}
 			socket.write(command);															// CGMiner can take commands as a simple string (for simple commands) or as json, i.e.: { command: command, parameter: parameter }
 		});
 		socket.on('error', function (err) {
