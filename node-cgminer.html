@@ -5,7 +5,8 @@
 		defaults: {
 			name: {value: "CGMiner" },
 			ip:   {value: "127.0.0.1"},
-			port: {value: "4028" }
+			port: {value: "4028" },
+			timeout: {value: "5000"}
 		},
 		inputs:1,
 		outputs:1,
@@ -29,6 +30,11 @@
 	<div class="form-row">
 		<label for="node-input-port"><i class="icon-tag"></i>Port</label>
 		<input type="text" id="node-input-port" placeholder="4028">
+	</div>
+	<div class="form-row">
+		<h4>Timeout</h4>
+		<label for="node-input-timeout"><i class="icon-tag"></i>Timeout (in ms)</label>
+		<input type="text" id="node-input-timeout" placeholder="5000">
 	</div>
 </script>
 
@@ -57,6 +63,8 @@
     <p><code>msg.payload</code> is returned upon a successful API status request
         and contains the complete, parsed object data from CGMiner; however, if CGMiner can't parse the
 	    returned data as valid json, the actual string data returned will be sent instead.</p>
+    <p>The <code>timeout</code> option is a period of time, in milliseconds, after which the api request
+		to cgminer will give up. If the request times out, the data returned will be empty.</p>
 <h3>References</h3>
     <ul>
         <li><a href="https://github.com/ckolivas/cgminer">CGMiner</a> - the CGMiner project</li>
