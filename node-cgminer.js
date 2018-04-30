@@ -18,13 +18,16 @@ var cgSendCmd = function (command, config, node, callback) {
 			if (config.timeout) {
 				tmout = setTimeout(function() {
 					socket.removeAllListeners();
-					callback('');															// send empty string if request times out
+					callback(false);														// send false if request times out
 					return;
 				}, Number(config.timeout));
 			}
 			socket.write(command);															// CGMiner can take commands as a simple string (for simple commands) or as json, i.e.: { command: command, parameter: parameter }
 		});
 		socket.on('error', function (err) {
+			if (config.timeout) {
+				callback(false);															// send false if time out is set
+			}
 			socket.removeAllListeners();
 			node.error('Net socket error: ' + err);
 			return null;
